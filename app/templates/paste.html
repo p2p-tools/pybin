@@ -2,18 +2,14 @@
 
 {% block content %}
 
-<form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
     <div class="box">
         <p>
             <textarea id='lineCounter' wrap='off' readonly>1.</textarea>
-            {{ form.paste(id='codeEditor', wrap='off') }}
-
+            <textarea id='codeEditor' readonly>
+                {{ paste.value }}
+            </textarea>
         </p>
     </div>
-<!--    {{ form.submit.label }}-->
-    {{ form.submit(type='submit', class='ghost-button') }}
-</form>
 
 <!-- javascript -->
 <script>
