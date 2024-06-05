@@ -6,7 +6,7 @@
     {{ form.hidden_tag() }}
     <div class="box">
         <p>
-            <textarea id='lineCounter' wrap='off' readonly>1.</textarea>
+            {{ form.line_count(id='lineCounter', wrap='off', readonly=True) }}
             {{ form.paste(id='codeEditor', wrap='off') }}
 
         </p>
@@ -28,10 +28,11 @@
     codeEditor.addEventListener('keydown', (e) => {
         let {keyCode} = e;
         let {value, selectionStart, selectionEnd} = codeEditor;
+        console.log(selectionStart, selectionEnd, value)
         if (keyCode === 9) {  // TAB = 9
             e.preventDefault();
             codeEditor.value = value.slice(0, selectionStart) + '\t' + value.slice(selectionEnd);
-            codeEditor.setSelectionRange(selectionStart + 2, selectionStart + 2)
+            codeEditor.selectionStart = codeEditor.selectionEnd = selectionStart+1
         }
     });
 

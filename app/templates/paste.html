@@ -4,12 +4,11 @@
 
     <div class="box">
         <p>
-            <textarea id='lineCounter' wrap='off' readonly>1.</textarea>
-            <textarea id='codeEditor' readonly>
-                {{ paste.value }}
-            </textarea>
+            <textarea style="overflow:hidden" id='lineCounter' wrap='off' readonly>{{ paste.line_count }}</textarea>
+            <textarea id='codeEditor' readonly>{{ paste.value }}</textarea>
         </p>
     </div>
+
 
 <!-- javascript -->
 <script>
@@ -27,7 +26,7 @@
         if (keyCode === 9) {  // TAB = 9
             e.preventDefault();
             codeEditor.value = value.slice(0, selectionStart) + '\t' + value.slice(selectionEnd);
-            codeEditor.setSelectionRange(selectionStart + 2, selectionStart + 2)
+            codeEditor.selectionStart = codeEditor.selectionEnd = selectionStart+1
         }
     });
 
