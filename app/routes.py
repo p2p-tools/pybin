@@ -14,16 +14,15 @@ from app.models import User, Paste
 def index():
     form = PasteForm()
     if form.validate_on_submit():
-        paste_uuid = save_paste(paste=form.paste.data)
+        paste_uuid = save_paste(paste=form.paste.data, line_count=form.line_count.data)
         return redirect(f'/{paste_uuid}')
     return render_template('index.html', form=form)
 
 
 @app.post('/api/save_paste')
-def save_paste(paste: str, user: str = None):
+def save_paste(paste: str, line_count: str, user: str = None):
     paste_uuid = uuid4()
-    p = Paste(id=paste_uuid, value=f"""{paste}""", author=user)
-    print(paste, '\n==============/n',p.value)
+    p = Paste(id=paste_uuid, value=f"""{paste}""", line_count=line_count, author=user)
     db.session.add(p)
     db.session.commit()
 
