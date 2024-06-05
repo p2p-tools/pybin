@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired
 
 class PasteForm(FlaskForm):
     paste = TextAreaField('Paste', validators=[DataRequired()])
+    line_count = TextAreaField('LineCount', validators=[DataRequired()])
     submit = SubmitField('Create paste')
 
 
