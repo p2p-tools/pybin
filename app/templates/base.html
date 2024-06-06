@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link href="{{ url_for('static', filename='prism.css') }}" rel="stylesheet" />
     <title>Pybin</title>
 </head>
 <body>
 <div>
-    Pybin:
-    <a href="{{ url_for('index') }}>Home</a>
-    <a href="{{ url_for('login') }}">Login</a>
-</div>
+    <a href="{{ url_for('index') }}">Pybin</a>
+        {% if current_user.is_anonymous %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+        {% else %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        {% endif %}
+<!--</div>-->
 <hr>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -22,5 +28,6 @@
 {% endif %}
 {% endwith %}
 {% block content %}{% endblock %}
+<script src="{{ url_for('static', filename='prism.js') }}"></script>
 </body>
 </html>
