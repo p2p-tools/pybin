@@ -2,10 +2,12 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+from flask_login import LoginManager
 
 from config import Config
 
 app = Flask(__name__)
+login = LoginManager(app)
 app.config.from_object(Config)
 
 CONVENTION = {
@@ -21,3 +23,8 @@ db = SQLAlchemy(app, metadata=metadata)
 migrate = Migrate(app, db)
 
 from app import routes, models
+
+
+@login.user_loader
+def load_user(id):
+    return db.session.get(models.User, int(id))
