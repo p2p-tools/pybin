@@ -1,12 +1,27 @@
-from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired
+from flask_wtf import FlaskForm
+from wtforms.validators import ValidationError, DataRequired
+import sqlalchemy as sa
+from app import db
+from app.models import User
 
 
 class PasteForm(FlaskForm):
     paste = TextAreaField('Paste', validators=[DataRequired()])
     line_count = TextAreaField('LineCount', validators=[DataRequired()])
     submit = SubmitField('Create paste')
+
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Register')
+
+    def validate_username(self, username):
+        user = db.session.scalar(sa.select(User).where(
+            User.username == username.data))
+        if user is not None:
+            raise ValidationError('Please use a different username.')
 
 
 class LoginForm(FlaskForm):
