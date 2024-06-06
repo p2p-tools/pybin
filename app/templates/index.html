@@ -7,15 +7,13 @@
     <div class="box">
         <p>
             {{ form.line_count(id='lineCounter', wrap='off', readonly=True) }}
-            {{ form.paste(id='codeEditor', wrap='off') }}
-
+            {{ form.paste(id='codeEditor', wrap='off', spellcheck="false") }}
         </p>
     </div>
-<!--    {{ form.submit.label }}-->
     {{ form.submit(type='submit', class='ghost-button') }}
 </form>
-
 <!-- javascript -->
+<script src="{{ url_for('static', filename='prism.js') }}"></script>
 <script>
     var codeEditor = document.getElementById('codeEditor');
     var lineCounter = document.getElementById('lineCounter');
@@ -31,7 +29,7 @@
         console.log(selectionStart, selectionEnd, value)
         if (keyCode === 9) {  // TAB = 9
             e.preventDefault();
-            codeEditor.value = value.slice(0, selectionStart) + '\t' + value.slice(selectionEnd);
+            codeEditor.value = codeEditor.value.slice(0, selectionStart) + "\t" + codeEditor.value.slice(selectionEnd, value.length);
             codeEditor.selectionStart = codeEditor.selectionEnd = selectionStart+1
         }
     });
