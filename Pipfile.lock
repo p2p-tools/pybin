@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3dfafe0b26e1a755217dfa79f2ca0b4954771b1408498e98b9e38afca38396fb"
+            "sha256": "7adaac6b2e9def1127be3fb9fe48bdeb1ce3464d3680b5bc35a6010d0c6e0e10"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -56,6 +56,15 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==3.0.3"
+        },
+        "flask-login": {
+            "hashes": [
+                "sha256:5e23d14a607ef12806c699590b89d0f0e0d67baeec599d75947bf9c147330333",
+                "sha256:849b25b82a436bf830a054e74214074af59097171562ab10bfa999e6b78aae5d"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==0.6.3"
         },
         "flask-migrate": {
             "hashes": [
@@ -163,6 +172,14 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==3.1.4"
+        },
+        "login": {
+            "hashes": [
+                "sha256:d3edf1e1a9ac26f43c4db7e2beb7649e411087f3a52f99a937740ba57f3d0e81"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3'",
+            "version": "==0.0.6"
         },
         "mako": {
             "hashes": [
@@ -295,11 +312,11 @@
         },
         "typing-extensions": {
             "hashes": [
-                "sha256:8cbcdc8606ebcb0d95453ad7dc5065e6237b6aa230a31e81d0f440c30fed5fd8",
-                "sha256:b349c66bea9016ac22978d800cfff206d5f9816951f12a7d0ec5578b0a819594"
+                "sha256:6024b58b69089e5a89c347397254e35f1bf02a907728ec7fee9bf0fe837d203a",
+                "sha256:915f5e35ff76f56588223f15fdd5938f9a1cf9195c0de25130c627e4d597f6d1"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==4.12.0"
+            "version": "==4.12.1"
         },
         "werkzeug": {
             "hashes": [
