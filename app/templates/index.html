@@ -1,55 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <div class="box">
         <p>
-            {{ form.line_count(id='lineCounter', wrap='off', readonly=True) }}
-            {{ form.paste(id='codeEditor', wrap='off', spellcheck="false") }}
+            {{ form.paste(id='editor', wrap='off') }}
         </p>
     </div>
     {{ form.submit(type='submit', class='ghost-button') }}
 </form>
-<!-- javascript -->
-<script src="{{ url_for('static', filename='prism.js') }}"></script>
 <script>
-    var codeEditor = document.getElementById('codeEditor');
-    var lineCounter = document.getElementById('lineCounter');
-
-    codeEditor.addEventListener('scroll', () => {
-        lineCounter.scrollTop = codeEditor.scrollTop;
-        lineCounter.scrollLeft = codeEditor.scrollLeft;
-    });
-
-    codeEditor.addEventListener('keydown', (e) => {
-        let {keyCode} = e;
-        let {value, selectionStart, selectionEnd} = codeEditor;
-        console.log(selectionStart, selectionEnd, value)
-        if (keyCode === 9) {  // TAB = 9
-            e.preventDefault();
-            codeEditor.value = codeEditor.value.slice(0, selectionStart) + "\t" + codeEditor.value.slice(selectionEnd, value.length);
-            codeEditor.selectionStart = codeEditor.selectionEnd = selectionStart+1
-        }
-    });
-
-    var lineCountCache = 0;
-
-    function line_counter() {
-        var lineCount = codeEditor.value.split('\n').length;
-        var outarr = new Array();
-        if (lineCountCache != lineCount) {
-            for (var x = 0; x < lineCount; x++) {
-                outarr[x] = (x + 1) + '.';
-            }
-            lineCounter.value = outarr.join('\n');
-        }
-        lineCountCache = lineCount;
-    }
-
-    codeEditor.addEventListener('input', () => {
-        line_counter();
+    var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+        lineNumbers: true,
+        mode: "text/x-python",
+        theme: "dracula"
     });
 </script>
 {% endblock %}
