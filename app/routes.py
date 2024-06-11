@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from flask import render_template, flash, redirect, url_for, request
 import sqlalchemy as sa
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required, AnonymousUserMixin
 
 from app import app, db
 from app.forms import LoginForm, PasteForm, RegistrationForm
@@ -16,15 +16,19 @@ from app.models import User, Paste
 def index():
     form = PasteForm()
     if form.validate_on_submit():
-        paste_uuid = save_paste(paste=form.paste.data, line_count=form.line_count.data, user=current_user)
+        paste_uuid = save_paste(paste=form.paste.data,
+                                user=(not isinstance(current_user, AnonymousUserMixin) and current_user))
         return redirect(f'/{paste_uuid}')
     return render_template('index.html', form=form)
 
 
 @app.post('/api/save_paste')
-def save_paste(paste: str, line_count: str, user: User = None):
+def save_paste(paste: str, user: User | None):
     paste_uuid = uuid4()
-    p = Paste(id=paste_uuid, value=f"""{paste}""", line_count=line_count, author=user, user_id=user.id)
+    if not user:
+        p = Paste(id=paste_uuid, value=f"""{paste}""")
+    else:
+        p = Paste(id=paste_uuid, value=f"""{paste}""", author=user, user_id=user.id)
     db.session.add(p)
     db.session.commit()
 
