@@ -8,7 +8,6 @@ from app.models import User
 
 class PasteForm(FlaskForm):
     paste = TextAreaField('Paste', validators=[DataRequired()])
-    line_count = TextAreaField('LineCount', validators=[DataRequired()])
     submit = SubmitField('Create paste')
 
 
