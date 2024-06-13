@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-    <link href="{{ url_for('static', filename='prism.css') }}" rel="stylesheet" />
     <script src="{{ url_for('static', filename='codemirror.js') }}"></script>
     <link  rel="stylesheet" href="{{ url_for('static', filename='dracula.css') }}">
     <link  rel="stylesheet" href="{{ url_for('static', filename='codemirror.css') }}">
@@ -11,8 +10,8 @@
     <title>Pybin</title>
 </head>
 <body>
-<div>
-    <a href="{{ url_for('index') }}">Pybin</a>
+<div class="bar">
+    <a class="pybin" href="{{ url_for('index') }}">Pybin</a>
         {% if current_user.is_anonymous %}
         <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('register') }}">Register</a>
@@ -20,7 +19,7 @@
         <a href="{{ url_for('logout') }}">Logout</a>
         <a href="{{ url_for('profile') }}">Profile</a>
         {% endif %}
-<!--</div>-->
+</div>
 <hr>
 {% with messages = get_flashed_messages() %}
 {% if messages %}

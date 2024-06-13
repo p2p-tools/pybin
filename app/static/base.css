@@ -164,3 +164,16 @@ div#content-box > pre#highlight-area {
     border: 2px solid #515151;
 }
 
+.bar {
+    display: inline-flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+a {
+    padding-right: 10px;
+}
+
+.pybin {
+    margin-right: auto;
+}
