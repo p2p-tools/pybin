@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<button class="fas fa-save action" disabled id="save"></button>
+<button class="fas fa-code action" disabled id="raw"></button>
+<button class="fas fa-plus action" id="new"></button>
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <div class="box">
