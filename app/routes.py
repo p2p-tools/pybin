@@ -8,7 +8,6 @@ from flask_login import current_user, login_user, logout_user, login_required, A
 from app import app, db
 from app.forms import LoginForm, PasteForm, RegistrationForm
 
-# @todo: registration, login
 from app.models import User, Paste
 
 
@@ -16,19 +15,20 @@ from app.models import User, Paste
 def index():
     form = PasteForm()
     if form.validate_on_submit():
-        paste_uuid = save_paste(paste=form.paste.data,
+        paste_uuid = save_paste(filename=form.filename.data,
+                                paste=form.paste.data,
                                 user=(not isinstance(current_user, AnonymousUserMixin) and current_user))
         return redirect(f'/{paste_uuid}')
     return render_template('index.html', form=form)
 
 
 @app.post('/api/save_paste')
-def save_paste(paste: str, user: User | None):
+def save_paste(filename: str, paste: str, user: User | None):
     paste_uuid = uuid4()
     if not user:
-        p = Paste(id=paste_uuid, value=f"""{paste}""")
+        p = Paste(id=paste_uuid, filename=filename, value=f"""{paste}""")
     else:
-        p = Paste(id=paste_uuid, value=f"""{paste}""", author=user, user_id=user.id)
+        p = Paste(id=paste_uuid, filename=filename, value=f"""{paste}""", author=user, user_id=user.id)
     db.session.add(p)
     db.session.commit()
 

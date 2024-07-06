@@ -2,6 +2,7 @@
 
 {% block content %}
 
+{{ paste.filename }}
 <textarea id="editor" readonly>{{ paste.value }}</textarea>
 <script>
     var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {

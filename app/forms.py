@@ -7,6 +7,7 @@ from app.models import User
 
 
 class PasteForm(FlaskForm):
+    filename = StringField('Filename', default='')
     paste = TextAreaField('Paste', validators=[DataRequired()])
     submit = SubmitField('Create paste')
 

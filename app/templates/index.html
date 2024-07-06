@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<button class="fas fa-save action" disabled id="save"></button>
-<button class="fas fa-code action" disabled id="raw"></button>
-<button class="fas fa-plus action" id="new"></button>
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <div class="box">
         <p>
+            {{ form.filename(placeholder='Filename') }}
+        </p>
+        <p>
             {{ form.paste(id='editor', wrap='off') }}
         </p>
     </div>
-    {{ form.submit(type='submit', class='ghost-button') }}
+    {{ form.submit(type='submit', class='ghost-button btn btn-outline-dark') }}
 </form>
 <script>
     var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {

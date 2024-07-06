@@ -34,6 +34,7 @@ class User(UserMixin, db.Model):
 class Paste(db.Model):
     """Paste model for db"""
     id = db.Column(UUID(as_uuid=True), primary_key=True, default="uuid_generate_v4()")
+    filename: so.Mapped[str] = so.mapped_column(default='')
     value: so.Mapped[str] = so.mapped_column()
     timestamp: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now(timezone.utc))
