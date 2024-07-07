@@ -34,7 +34,6 @@ class Paste(db.Model):
     files = db.relationship('File', backref='paste')
 
     user_id: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey(User.id), index=True)
-    author: so.Mapped[Optional[User]] = so.relationship(back_populates='posts')
     timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
 
 
@@ -44,7 +43,7 @@ class File(db.Model):
     filename: so.Mapped[str] = so.mapped_column(default='')
     value: so.Mapped[str] = so.mapped_column()
 
-    paste = db.Column(db.Column(UUID(as_uuid=True)), db.ForeignKey('paste.id'), nullable=False)
+    paste_id: so.Mapped[Optional[UUID]] = so.mapped_column(sa.ForeignKey(Paste.id), index=True)
 
     def __repr__(self):
         return (f'<Paste(id={self.id}, value={self.value}, timestamp={self.timestamp}'
