@@ -4,12 +4,14 @@
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <div class="box">
+        {% for field in form.paste %}
         <p>
-            {{ form.filename(placeholder='Filename') }}
+            {{ field.filename(placeholder='Filename') }}
         </p>
         <p>
-            {{ form.paste(id='editor', wrap='off') }}
+            {{ field.value(id='editor', wrap='off') }}
         </p>
+        {% endfor %}
     </div>
     {{ form.submit(type='submit', class='ghost-button btn btn-outline-dark') }}
 </form>
