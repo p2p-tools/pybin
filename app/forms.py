@@ -1,4 +1,4 @@
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, FieldList, FormField
 from flask_wtf import FlaskForm
 from wtforms.validators import ValidationError, DataRequired
 import sqlalchemy as sa
@@ -6,9 +6,13 @@ from app import db
 from app.models import User
 
 
+class FileForm(FlaskForm):
+    filename = StringField('Filename')
+    value = TextAreaField('Paste', validators=[DataRequired()])
+
+
 class PasteForm(FlaskForm):
-    filename = StringField('Filename', default='')
-    paste = TextAreaField('Paste', validators=[DataRequired()])
+    paste = FieldList(FormField(FileForm), min_entries=1)
     submit = SubmitField('Create paste')
 
 
