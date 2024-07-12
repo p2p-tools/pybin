@@ -8,36 +8,42 @@ from flask_login import current_user, login_user, logout_user, login_required, A
 from app import app, db
 from app.forms import LoginForm, PasteForm, RegistrationForm
 
-from app.models import User, Paste
+from app.models import User, Paste, File
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = PasteForm()
-    if form.validate_on_submit():
-        paste_uuid = save_paste(filename=form.filename.data,
-                                paste=form.paste.data,
+    if form.data['submit']:
+        paste_uuid = save_paste(form.data['paste'],
                                 user=(not isinstance(current_user, AnonymousUserMixin) and current_user))
         return redirect(f'/{paste_uuid}')
     return render_template('index.html', form=form)
 
 
 @app.post('/api/save_paste')
-def save_paste(filename: str, paste: str, user: User | None):
-    paste_uuid = uuid4()
-    if not user:
-        p = Paste(id=paste_uuid, filename=filename, value=f"""{paste}""")
-    else:
-        p = Paste(id=paste_uuid, filename=filename, value=f"""{paste}""", author=user, user_id=user.id)
+def save_paste(pastes: list[dict], user: User | None):
+    print(pastes)
+    p = Paste(id=uuid4())
+    for paste in pastes:
+        file = File(id=uuid4(), filename=paste.get('filename'),
+                    value=f"""{paste.get('value')}""", paste_id=p.id)
+        db.session.add(file)
+
+    if user:
+        p.user_id = user.id
+
     db.session.add(p)
     db.session.commit()
 
-    return f'{paste_uuid}'
+    return f'{p.id}'
 
 
 @app.get('/<uuid:paste_url>')
 def get_paste(paste_url):
-    query = sa.select(Paste).where(Paste.id.like(paste_url))
+    # todo: this will return list of files, so need to change the form i think and paste.html
+
+    query = sa.select(File).where(File.paste_id.like(paste_url))
     paste = db.session.scalar(query)
     return render_template('paste.html', paste=paste)
 
