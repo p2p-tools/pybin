@@ -36,6 +36,10 @@ class Paste(db.Model):
     user_id: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
 
+    def __repr__(self):
+        return (f'<Paste(id={self.id}, files={self.files}, timestamp={self.timestamp} '
+                f'user_id={self.user_id})>')
+
 
 class File(db.Model):
     """Paste model for db"""
@@ -46,5 +50,5 @@ class File(db.Model):
     paste_id: so.Mapped[Optional[UUID]] = so.mapped_column(sa.ForeignKey(Paste.id), index=True)
 
     def __repr__(self):
-        return (f'<Paste(id={self.id}, value={self.value}, timestamp={self.timestamp}'
-                f'user_id={self.user_id}, author={self.author})>')
+        return (f'<File(id={self.id}, filename={self.filename}, value={self.value} '
+                f'paste_id={self.paste_id})>')
