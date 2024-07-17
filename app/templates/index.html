@@ -3,23 +3,45 @@
 {% block content %}
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
-    <div class="box">
-        {% for field in form.paste %}
+    <div class="box" id="box">
         <p>
-            {{ field.filename(placeholder='Filename') }}
+            <input name="filename-0" type="text" placeholder="Filename">
+            <textarea name="value-0" id="editor-0" wrap="soft"></textarea>
         </p>
-        <p>
-            {{ field.value(id='editor', wrap='off') }}
-        </p>
-        {% endfor %}
     </div>
+    <button type="button" class="addNewPaste" id="addNewPaste">Add file</button>
     {{ form.submit(type='submit', class='ghost-button btn btn-outline-dark') }}
 </form>
 <script>
-    var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+    var editor = CodeMirror.fromTextArea(document.getElementById("editor-0"), {
         lineNumbers: true,
         mode: "text/x-python",
         theme: "dracula"
+    });
+
+    var fieldNum = 1;
+    var div = document.getElementById("box");
+    var filename = document.createElement("input");
+    var value = document.createElement("textarea");
+    var button = document.getElementById("addNewPaste");
+
+
+    button.addEventListener('click', function() {
+        filename.name = "filename-" + fieldNum
+        filename.placeholder = "Filename"
+        div.append(filename.cloneNode(true));
+
+        value.name = "value-" + fieldNum
+        value.id = "editor-" + fieldNum
+        div.append(value.cloneNode(true));
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("editor-" + fieldNum), {
+            lineNumbers: true,
+            mode: "text/x-python",
+            theme: "dracula"
+        });
+
+        fieldNum++
     });
 </script>
 {% endblock %}
