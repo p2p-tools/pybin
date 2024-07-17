@@ -2,13 +2,17 @@
 
 {% block content %}
 
-{{ paste.filename }}
-<textarea id="editor" readonly>{{ paste.value }}</textarea>
+{% for index in range(paste|length) %}
+        {{ paste[index].filename }}
+    <textarea id="editor-{{ index }}" readonly>{{ paste[index].value }}</textarea>
+{% endfor %}
 <script>
-    var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-        lineNumbers: true,
-        mode: "text/x-python",
-        theme: "dracula"
-    });
+    for (let i = 0; i < {{ paste|length }}; i++) {
+        var editor = CodeMirror.fromTextArea(document.getElementById("editor-"+i), {
+            lineNumbers: true,
+            mode: "text/x-python",
+            theme: "dracula",
+        });
+    }
 </script>
 {% endblock %}
