@@ -1,6 +1,7 @@
 from datetime import datetime
 from datetime import timezone
 from typing import Optional
+from cryptography.fernet import Fernet
 
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -9,6 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 from app import db
+from app import Config
 
 
 class User(UserMixin, db.Model):
@@ -48,6 +50,16 @@ class File(db.Model):
     value: so.Mapped[str] = so.mapped_column()
 
     paste_id: so.Mapped[Optional[UUID]] = so.mapped_column(sa.ForeignKey(Paste.id), index=True)
+
+    def set_value(self, value):
+        key = Config.ENCRYPTION_KEY
+        cipher_suite = Fernet(key)
+        self.value = cipher_suite.encrypt(value.encode())
+
+    def get_value(self):
+        key = Config.ENCRYPTION_KEY
+        cipher_suite = Fernet(key)
+        return cipher_suite.decrypt(self.value).decode()
 
     def __repr__(self):
         return (f'<File(id={self.id}, filename={self.filename}, value={self.value} '

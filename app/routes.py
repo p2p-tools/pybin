@@ -27,7 +27,8 @@ def save_paste(pastes: list[dict], user: User | None):
     p = Paste(id=uuid4())
     for filename, value in pastes:
         file = File(id=uuid4(), filename=filename,
-                    value=value, paste_id=p.id)
+                    paste_id=p.id)
+        file.set_value(value)
         db.session.add(file)
 
     if user:

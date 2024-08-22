@@ -1,10 +1,8 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-{% for index in range(paste|length) %}
-        {{ paste[index].filename }}
-    <textarea id="editor-{{ index }}" readonly>{{ paste[index].value }}</textarea>
+{% extends "base.html" %} {% block content %} {% for index in
+range(paste|length) %} {{ paste[index].filename }}
+<textarea id="editor-{{ index }}" readonly>
+{{ paste[index].get_value() }}</textarea
+>
 {% endfor %}
 <script>
     for (let i = 0; i < {{ paste|length }}; i++) {
