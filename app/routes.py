@@ -10,6 +10,7 @@ from app.forms import LoginForm, PasteForm, RegistrationForm
 
 from app.models import User, Paste, File
 
+# todo: http://127.0.0.1:3322/5a88036e-dc60-418e-8a9c-d4df032ad648
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
