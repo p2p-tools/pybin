@@ -1,34 +1,32 @@
-from urllib.parse import urlsplit
-from uuid import uuid4
-
 from flask import render_template, flash, redirect, url_for, request
 import sqlalchemy as sa
 from flask_login import current_user, login_user, logout_user, login_required, AnonymousUserMixin
+from fastnanoid import generate
 
 from app import app, db
 from app.forms import LoginForm, PasteForm, RegistrationForm
 
 from app.models import User, Paste, File
 
-# todo: http://127.0.0.1:3322/5a88036e-dc60-418e-8a9c-d4df032ad648
-
+"""
+todo: http://127.0.0.1:3322/czSd-wuN4
+"""
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = PasteForm()
     if form.data['submit']:
         paste = zip(form.data['filename'], form.data['value'])
-        paste_uuid = save_paste(paste,
+        paste_url = save_paste(paste,
                                 user=(not isinstance(current_user, AnonymousUserMixin) and current_user))
-        return redirect(f'/{paste_uuid}')
+        return redirect(f'/{paste_url}')
     return render_template('index.html', form=form)
 
 
 @app.post('/api/save_paste')
 def save_paste(pastes: list[dict], user: User | None):
-    p = Paste(id=uuid4())
+    p = Paste(id=generate(size=9))
     for filename, value in pastes:
-        file = File(id=uuid4(), filename=filename,
-                    paste_id=p.id)
+        file = File(filename=filename, paste_id=p.id)
         file.set_value(value)
         db.session.add(file)
 
@@ -41,8 +39,9 @@ def save_paste(pastes: list[dict], user: User | None):
     return f'{p.id}'
 
 
-@app.get('/<uuid:paste_url>')
+@app.get('/<string:paste_url>')
 def get_paste(paste_url):
+    print(db.session.scalars(sa.select(File)).all())
     query = sa.select(File).where(File.paste_id.like(paste_url))
     paste = db.session.scalars(query)
     return render_template('paste.html', paste=paste.all())

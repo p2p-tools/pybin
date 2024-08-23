@@ -11,6 +11,7 @@ flask-migrate = "*"
 flask-login = "*"
 login = "*"
 python-dotenv = "*"
+fastnanoid = "*"
 
 [dev-packages]
 
