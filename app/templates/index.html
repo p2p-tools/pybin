@@ -2,16 +2,19 @@
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <div class="box" id="box">
-        <p>
+        <div class="head">
             <input name="filename-0" type="text" placeholder="Filename" />
-            <textarea name="value-0" id="editor-0" wrap="soft"></textarea>
-        </p>
+        </div>
+        <textarea name="value-0" id="editor-0" wrap="soft"></textarea>
     </div>
-    <button type="button" class="addNewPaste" id="addNewPaste">Add file</button>
-    <button type="button" class="RemovePaste" id="RemovePaste">
-        Remove file
-    </button>
-    {{ form.submit(type='submit', class='ghost-button btn btn-outline-dark') }}
+
+    <div class="buttons">
+        <button type="button" class="addNewPaste" id="addNewPaste">
+            Add file
+        </button>
+        {{ form.submit(type='submit', class='create ghost-button btn
+        btn-outline-dark') }}
+    </div>
 </form>
 <script>
     var editor = CodeMirror.fromTextArea(document.getElementById("editor-0"), {
@@ -24,14 +27,42 @@
     var div = document.getElementById("box");
     var filename = document.createElement("input");
     var value = document.createElement("textarea");
+    var removeButton = document.createElement("button");
     var button = document.getElementById("addNewPaste");
-    var removeButton = document.getElementById("RemovePaste");
 
     button.addEventListener("click", function () {
         fieldNum += 1;
         filename.name = "filename-" + fieldNum;
         filename.placeholder = "Filename";
         div.append(filename.cloneNode(true));
+
+        removeButton.type = "button";
+        removeButton.class = "RemovePaste";
+        removeButton.id = "RemovePaste-" + fieldNum;
+        removeButton.innerHTML = "Remove";
+        div.append(removeButton.cloneNode(true));
+
+        var remove_button = document.getElementById("RemovePaste-" + fieldNum);
+
+        remove_button.addEventListener("click", function () {
+            if (fieldNum < 1) {
+                return;
+            }
+            let editor = document.getElementById("editor-" + fieldNum);
+            let codemirror =
+                document.getElementsByClassName("CodeMirror")[fieldNum];
+            codemirror.remove();
+            editor.remove();
+            let filename = document.getElementsByName(
+                "filename-" + fieldNum,
+            )[0];
+            filename.remove();
+            var remove_button = document.getElementById(
+                "RemovePaste-" + fieldNum,
+            );
+            remove_button.remove();
+            fieldNum -= 1;
+        });
 
         value.name = "value-" + fieldNum;
         value.id = "editor-" + fieldNum;
@@ -45,21 +76,6 @@
                 theme: "dracula",
             },
         );
-    });
-
-    removeButton.addEventListener("click", function () {
-        console.log(fieldNum);
-        if (fieldNum < 1) {
-            return;
-        }
-        let editor = document.getElementById("editor-" + fieldNum);
-        let codemirror =
-            document.getElementsByClassName("CodeMirror")[fieldNum];
-        codemirror.remove();
-        editor.remove();
-        let filename = document.getElementsByName("filename-" + fieldNum)[0];
-        filename.remove();
-        fieldNum -= 1;
     });
 </script>
 {% endblock %}
