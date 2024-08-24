@@ -66,6 +66,10 @@
                 "RemovePaste-" + fieldNum,
             );
             remove_button.remove();
+
+            div_head = document.getElementById("head-" + fieldNum);
+            div_head.remove();
+
             fieldNum -= 1;
         });
 
