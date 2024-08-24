@@ -29,18 +29,23 @@
     var value = document.createElement("textarea");
     var removeButton = document.createElement("button");
     var button = document.getElementById("addNewPaste");
+    var head = document.createElement("div");
 
     button.addEventListener("click", function () {
         fieldNum += 1;
+        head.id = "head-" + fieldNum;
+        div.append(head.cloneNode(true));
+        div_head = document.getElementById("head-" + fieldNum);
+
         filename.name = "filename-" + fieldNum;
         filename.placeholder = "Filename";
-        div.append(filename.cloneNode(true));
+        div_head.append(filename.cloneNode(true));
 
         removeButton.type = "button";
         removeButton.class = "RemovePaste";
         removeButton.id = "RemovePaste-" + fieldNum;
         removeButton.innerHTML = "Remove";
-        div.append(removeButton.cloneNode(true));
+        div_head.append(removeButton.cloneNode(true));
 
         var remove_button = document.getElementById("RemovePaste-" + fieldNum);
 

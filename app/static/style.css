@@ -394,7 +394,7 @@ fieldset button:last-child {
     justify-content: space-between;
 }
 
-.head {
+[id^="head-"] {
     display: flex;
     justify-content: space-between;
 }
