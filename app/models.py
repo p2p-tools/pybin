@@ -1,7 +1,6 @@
 from datetime import datetime
 from datetime import timezone
 from typing import Optional
-from cryptography.fernet import Fernet
 
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -12,6 +11,7 @@ from fastnanoid import generate
 
 from app import db
 from app import Config
+from app.utils import encrypt, decrypt
 
 
 class User(UserMixin, db.Model):
@@ -52,15 +52,11 @@ class File(db.Model):
 
     paste_id: so.Mapped[Optional[UUID]] = so.mapped_column(sa.ForeignKey(Paste.id), index=True)
 
-    def set_value(self, value):
-        key = Config.ENCRYPTION_KEY
-        cipher_suite = Fernet(key)
-        self.value = cipher_suite.encrypt(value.encode())
+    def set_value(self, value, cipher_suite):
+        self.value = encrypt(cipher_suite, value.encode())
 
-    def get_value(self):
-        key = Config.ENCRYPTION_KEY
-        cipher_suite = Fernet(key)
-        return cipher_suite.decrypt(self.value).decode()
+    def get_value(self, cipher_suite):
+        return decrypt(cipher_suite, self.value).decode()
 
     def __repr__(self):
         return (f'<File(id={self.id}, filename={self.filename}, value={self.value} '

@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %} {% for index in
 range(paste|length) %} {{ paste[index].filename }}
 <textarea id="editor-{{ index }}" readonly>
-{{ paste[index].get_value() }}</textarea
+{{ paste[index].get_value(cipher_suite) }}</textarea
 >
 {% endfor %}
 <script>
@@ -11,6 +11,10 @@ range(paste|length) %} {{ paste[index].filename }}
             mode: "text/x-python",
             theme: "dracula",
         });
+        document.getElementById("CodeMirror-lines").addEventListener("input", function () {
+          console.log(editor)
+        });
+
     }
 </script>
 {% endblock %}

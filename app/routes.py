@@ -5,29 +5,30 @@ from fastnanoid import generate
 
 from app import app, db
 from app.forms import LoginForm, PasteForm, RegistrationForm
-
 from app.models import User, Paste, File
+from app.utils import generate_cipher_suite, generate_encryption_key
 
 """
-todo: http://127.0.0.1:3322/czSd-wuN4
+http://127.0.0.1:3322/czSd-wuN4
 """
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = PasteForm()
     if form.data['submit']:
         paste = zip(form.data['filename'], form.data['value'])
-        paste_url = save_paste(paste,
+        paste = save_paste(paste,
                                 user=(not isinstance(current_user, AnonymousUserMixin) and current_user))
-        return redirect(f'/{paste_url}')
+        return redirect(f"/{paste.get('url')}{paste.get('enc_key').decode()}")
     return render_template('index.html', form=form)
 
 
 @app.post('/api/save_paste')
 def save_paste(pastes: list[dict], user: User | None):
+    encryption_key = generate_encryption_key()
     p = Paste(id=generate(size=9))
     for filename, value in pastes:
         file = File(filename=filename, paste_id=p.id)
-        file.set_value(value)
+        file.set_value(value, cipher_suite=generate_cipher_suite(encryption_key))
         db.session.add(file)
 
     if user:
@@ -36,15 +37,20 @@ def save_paste(pastes: list[dict], user: User | None):
     db.session.add(p)
     db.session.commit()
 
-    return f'{p.id}'
+    return {'url': p.id, 'enc_key': encryption_key}
 
 
-@app.get('/<string:paste_url>')
-def get_paste(paste_url):
-    print(db.session.scalars(sa.select(File)).all())
+@app.get('/<string:paste>')
+def get_paste(paste):
+    paste_url = paste[:9]
+    enc_key = paste[9:]
+    try:
+        cipher_suite = generate_cipher_suite(enc_key)
+    except ValueError:
+        return render_template('404.html')
     query = sa.select(File).where(File.paste_id.like(paste_url))
     paste = db.session.scalars(query)
-    return render_template('paste.html', paste=paste.all())
+    return render_template('paste.html', paste=paste.all(), cipher_suite=cipher_suite)
 
 
 @app.route('/register', methods=['GET', 'POST'])
