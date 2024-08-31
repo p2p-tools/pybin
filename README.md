@@ -7,6 +7,6 @@ The data is stored encrypted with 256-bit AES encryption in GCM. Server **does n
 Common url: ```V5i0G9acTt1DDFAW3N4P-2aW29gBMhQ6nEct3vz2oSwqjZdOAYwo=```
 consists of two parts:
   1) first 9 chars - id of the paste
-  2) rest of a string is a decryption key for your paste
+  2) rest of the string is a decryption key for your paste
 
 Pybin stores only encrypted paste and corresponding id.
