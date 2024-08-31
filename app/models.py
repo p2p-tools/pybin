@@ -29,7 +29,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f'<User(id={self.id}, username={self.username}, posts={self.posts})>'
+        return f'<User(id={self.id}, username={self.username}, posts={self.pastes})>'
 
 
 class Paste(db.Model):
@@ -53,11 +53,9 @@ class File(db.Model):
     paste_id: so.Mapped[Optional[str]] = so.mapped_column(sa.ForeignKey(Paste.id), index=True)
 
     def set_value(self, value, nonce, aesgcm):
-        print("ENCRYPTING: ", nonce, "\n")
         self.value = encrypt(nonce.encode(), aesgcm, value.encode())
 
     def get_value(self, nonce, aesgcm):
-        print("DECRYPTING: ", nonce, "\n")
         return decrypt(nonce.encode(), aesgcm, self.value).decode()
 
     def __repr__(self):
