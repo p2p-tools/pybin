@@ -505,8 +505,13 @@ textarea {
 .box {
     margin: 0px 0px 10px;
 }
-/*
 
+button:active {
+    border: none;
+    outline: none;
+}
+
+/*
 html,
 body {
     height: calc(100% + env(safe-area-inset-top) / 2);

@@ -3,8 +3,7 @@ range(paste|length) %}
 <p>
     {{ paste[index].filename }}
     <textarea id="editor-{{ index }}" readonly>
-{{ paste[index].get_value(nonce, aesgcm) }}
-</textarea
+{{ paste[index].get_value(nonce, aesgcm) }}</textarea
     >
 </p>
 {% endfor %}
