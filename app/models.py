@@ -50,13 +50,15 @@ class File(db.Model):
     filename: so.Mapped[str] = so.mapped_column(default='') # maybe i should encrypt this?
     value: so.Mapped[str] = so.mapped_column()
 
-    paste_id: so.Mapped[Optional[UUID]] = so.mapped_column(sa.ForeignKey(Paste.id), index=True)
+    paste_id: so.Mapped[Optional[str]] = so.mapped_column(sa.ForeignKey(Paste.id), index=True)
 
-    def set_value(self, value, cipher_suite):
-        self.value = encrypt(cipher_suite, value.encode())
+    def set_value(self, value, nonce, aesgcm):
+        print("ENCRYPTING: ", nonce, "\n")
+        self.value = encrypt(nonce.encode(), aesgcm, value.encode())
 
-    def get_value(self, cipher_suite):
-        return decrypt(cipher_suite, self.value).decode()
+    def get_value(self, nonce, aesgcm):
+        print("DECRYPTING: ", nonce, "\n")
+        return decrypt(nonce.encode(), aesgcm, self.value).decode()
 
     def __repr__(self):
         return (f'<File(id={self.id}, filename={self.filename}, value={self.value} '

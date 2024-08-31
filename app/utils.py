@@ -1,17 +1,19 @@
-from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 
 def generate_encryption_key():
-    return Fernet.generate_key()
+    return AESGCM.generate_key(bit_length=128)
 
 
-def generate_cipher_suite(key):
-    return Fernet(key)
+def generate_aesgcm(key):
+    return AESGCM(key)
 
 
-def encrypt(cipher_suite, data):
-    return cipher_suite.encrypt(data)
+def encrypt(nonce, aesgcm, data):
+    ct = aesgcm.encrypt(nonce, data, None)
+    return ct
 
 
-def decrypt(cipher_suite, encrypted_data):
-    return cipher_suite.decrypt(encrypted_data)
+def decrypt(nonce, aesgcm, encrypted_data):
+    data = aesgcm.decrypt(nonce, encrypted_data, None)
+    return data
