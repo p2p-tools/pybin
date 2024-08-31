@@ -1,3 +1,5 @@
+import base64
+
 from flask import render_template, flash, redirect, url_for, request
 import sqlalchemy as sa
 from flask_login import current_user, login_user, logout_user, login_required, AnonymousUserMixin
@@ -6,7 +8,7 @@ from fastnanoid import generate
 from app import app, db
 from app.forms import LoginForm, PasteForm, RegistrationForm
 from app.models import User, Paste, File
-from app.utils import generate_cipher_suite, generate_encryption_key
+from app.utils import generate_aesgcm, generate_encryption_key
 
 """
 http://127.0.0.1:3322/czSd-wuN4
@@ -18,17 +20,20 @@ def index():
         paste = zip(form.data['filename'], form.data['value'])
         paste = save_paste(paste,
                                 user=(not isinstance(current_user, AnonymousUserMixin) and current_user))
-        return redirect(f"/{paste.get('url')}{paste.get('enc_key').decode()}")
+        return redirect(f"/{paste.get('url')}{paste.get('enc_key')}")
     return render_template('index.html', form=form)
 
 
 @app.post('/api/save_paste')
 def save_paste(pastes: list[dict], user: User | None):
     encryption_key = generate_encryption_key()
+    base64_key = base64.urlsafe_b64encode(encryption_key).decode('utf-8')
+
     p = Paste(id=generate(size=9))
+
     for filename, value in pastes:
         file = File(filename=filename, paste_id=p.id)
-        file.set_value(value, cipher_suite=generate_cipher_suite(encryption_key))
+        file.set_value(value, aesgcm=generate_aesgcm(encryption_key), nonce=p.id[6:]+base64_key[:10])
         db.session.add(file)
 
     if user:
@@ -37,20 +42,21 @@ def save_paste(pastes: list[dict], user: User | None):
     db.session.add(p)
     db.session.commit()
 
-    return {'url': p.id, 'enc_key': encryption_key}
+    return {'url': p.id, 'enc_key': base64_key}
 
 
 @app.get('/<string:paste>')
 def get_paste(paste):
     paste_url = paste[:9]
     enc_key = paste[9:]
+    nonce = paste_url[6:]+enc_key[:10]
     try:
-        cipher_suite = generate_cipher_suite(enc_key)
+        aesgcm = generate_aesgcm(base64.urlsafe_b64decode(enc_key))
     except ValueError:
         return render_template('404.html')
     query = sa.select(File).where(File.paste_id.like(paste_url))
     paste = db.session.scalars(query)
-    return render_template('paste.html', paste=paste.all(), cipher_suite=cipher_suite)
+    return render_template('paste.html', paste=paste.all(), nonce=nonce, aesgcm=aesgcm)
 
 
 @app.route('/register', methods=['GET', 'POST'])
