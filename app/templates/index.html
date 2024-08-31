@@ -3,13 +3,13 @@
     {{ form.hidden_tag() }}
     <div class="box" id="box">
         <div class="head">
-            <input name="filename-0" type="text" placeholder="Filename" />
+            <input name="filename-0" type="text" placeholder="filename" />
         </div>
         <textarea name="value-0" id="editor-0" wrap="soft"></textarea>
     </div>
     <div class="buttons">
         <button type="button" class="addNewPaste" id="addNewPaste">
-            Add file
+            add file
         </button>
         {{ form.submit(type='submit', class='create ghost-button btn
         btn-outline-dark') }}
@@ -38,13 +38,14 @@
         div_head = document.getElementById("head-" + fieldNum);
 
         filename.name = "filename-" + fieldNum;
-        filename.placeholder = "Filename";
+        filename.placeholder = "filename";
+        filename.type = "text";
         div_head.append(filename.cloneNode(true));
 
         removeButton.type = "button";
         removeButton.class = "RemovePaste";
         removeButton.id = "RemovePaste-" + fieldNum;
-        removeButton.innerHTML = "Remove";
+        removeButton.innerHTML = "remove";
         div_head.append(removeButton.cloneNode(true));
 
         var remove_button = document.getElementById("RemovePaste-" + fieldNum);

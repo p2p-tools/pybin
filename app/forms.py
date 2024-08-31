@@ -9,7 +9,7 @@ from app.models import User
 class PasteForm(FlaskForm):
     filename = FieldList(StringField('Filename'), min_entries=1)
     value = FieldList(TextAreaField('Paste', validators=[DataRequired()]), min_entries=1)
-    submit = SubmitField('Create paste')
+    submit = SubmitField('create paste')
 
 
 class RegistrationForm(FlaskForm):
