@@ -2,6 +2,7 @@
 Pybin is an open-source, online pastebin that keeps the server entirely blind to the content you share.
 
 The data is stored encrypted with 256-bit AES encryption in GCM. Server **does not** store decryption keys, they are part of a url
+![image](https://github.com/user-attachments/assets/91d8cd58-bac3-4f0c-b3e4-d1619ace21c5)
 
 ## How it works
 Common url: ```V5i0G9acTt1DDFAW3N4P-2aW29gBMhQ6nEct3vz2oSwqjZdOAYwo=```
