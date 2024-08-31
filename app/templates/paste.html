@@ -1,9 +1,14 @@
 {% extends "base.html" %} {% block content %} {% for index in
-range(paste|length) %} {{ paste[index].filename }}
-<textarea id="editor-{{ index }}" readonly>
-{{ paste[index].get_value(cipher_suite) }}</textarea
->
+range(paste|length) %}
+<p>
+    {{ paste[index].filename }}
+    <textarea id="editor-{{ index }}" readonly>
+
+           {{ paste[index].get_value(nonce, aesgcm) }}</textarea
+    >
+</p>
 {% endfor %}
+
 <script>
     for (let i = 0; i < {{ paste|length }}; i++) {
         var editor = CodeMirror.fromTextArea(document.getElementById("editor-"+i), {
@@ -11,10 +16,7 @@ range(paste|length) %} {{ paste[index].filename }}
             mode: "text/x-python",
             theme: "dracula",
         });
-        document.getElementById("CodeMirror-lines").addEventListener("input", function () {
-          console.log(editor)
-        });
-
+        editor.setSize(810, 400);
     }
 </script>
 {% endblock %}

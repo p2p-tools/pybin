@@ -7,7 +7,6 @@
         </div>
         <textarea name="value-0" id="editor-0" wrap="soft"></textarea>
     </div>
-
     <div class="buttons">
         <button type="button" class="addNewPaste" id="addNewPaste">
             Add file
@@ -22,6 +21,7 @@
         mode: "text/x-python",
         theme: "dracula",
     });
+    editor.setSize(810, 400);
 
     var fieldNum = 0;
     var div = document.getElementById("box");
@@ -85,6 +85,7 @@
                 theme: "dracula",
             },
         );
+        editor.setSize(810, 400);
     });
 </script>
 {% endblock %}
