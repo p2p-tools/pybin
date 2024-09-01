@@ -3,7 +3,6 @@ from flask_wtf import FlaskForm
 from wtforms.validators import ValidationError, DataRequired
 import sqlalchemy as sa
 from app import db
-from app.models import User
 
 
 class PasteForm(FlaskForm):
